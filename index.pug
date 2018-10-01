@@ -1,0 +1,57 @@
+mixin card(id,title, link, classes)
+  .card(id=id class="classes")
+    .card-header
+      if link !== ''
+        a(href=link target="_blank")
+          span= title
+          i.fa.fa-external-link
+      else
+        =title
+    .card-body
+      if block
+        block
+      else
+        span ?
+html
+  head
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(charset='UTF-8')
+    meta(name='author', content='Dominik Sigmund')
+    meta(name='publisher', content='Dominik Sigmund')
+    meta(name='copyright', content='Dominik Sigmund')
+    link(rel="apple-touch-icon", sizes="180x180", href="images/apple-touch-icon.png")
+    link(rel="icon", type="image/png", sizes="32x32", href="images/favicon-32x32.png")
+    link(rel="icon", type="image/png", sizes="16x16", href="images/favicon-16x16.png")
+    link(rel="manifest", href="images/site.webmanifest")
+    link(rel="mask-icon", href="images/safari-pinned-tab.svg", color="#607d8b")
+    link(rel="shortcut icon", href="images/favicon.ico")
+    meta(name="msapplication-TileColor", content="#607d8b")
+    meta(name="msapplication-config", content="images/browserconfig.xml")
+    meta(name="theme-color", content="#607d8b")
+    title My Dashboard
+    link(rel='stylesheet', href='build.css')
+  body
+    .container
+      h1.primary My Dashboard
+      .card-columns
+        +card('datum', 'Datum','', '')
+        +card('wetter', 'Wetter','http://wetter.com',  '')
+        +card('wasser', 'Wasser','',  '')
+        +card('body', 'Abnehmen','',  '')
+        +card('termine', 'Termine','',  '')
+        +card('todos', 'Todos','',  '')
+        +card('azubis', 'Wo sind die Azubis','',  '')
+        +card('mails', 'E-Mails','',  '')
+        +card('server', 'Server-Monitor','',  '')
+        +card('lauf', 'Laufen', '', '')
+        +card('segen', 'Segen des Tages', '', '')
+        +card('randomverse', 'ZufallsVers', '', '')
+        +card('losung', 'Tageslosung', '', '')
+        +card('photos', 'Photos', '', '')
+        +card('sport_1860', '1860 Stand', '', '')
+        +card('sport_bucs', 'Bucanners Stand', '', '')
+        +card('sport_ehc', 'EHC München Stand', '', '')
+        +card('news', 'News', '', '')
+        +card('feeds', 'Feeds', '', '')
+      script(src='build.js')
