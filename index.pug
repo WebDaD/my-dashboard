@@ -4,6 +4,7 @@ mixin card(id,title, link, classes)
       if link !== ''
         a(href=link target="_blank")
           span= title
+          |  
           i.fa.fa-external-link
       else
         =title
@@ -36,11 +37,13 @@ html
       h1.primary My Dashboard
       .card-columns
         +card('datum', 'Datum','', '')
+        +card('kontostand', 'Kontostand','', '')
         +card('wetter', 'Wetter','http://wetter.com',  '')
         +card('wasser', 'Wasser','',  '')
         +card('body', 'Abnehmen','',  '')
+        +card('kantine', 'Kantine', 'http://br-speiseplan.br.de/mahlzeit/menue.html#dish-list-page',  '')
         +card('termine', 'Termine','',  '')
-        +card('todos', 'Todos','',  '')
+        +card('todos', 'Todos','https://todo.webdad.eu',  '')
         +card('azubis', 'Wo sind die Azubis','',  '')
         +card('mails', 'E-Mails','',  '')
         +card('server', 'Server-Monitor','',  '')
@@ -52,6 +55,8 @@ html
         +card('sport_1860', '1860 Stand', '', '')
         +card('sport_bucs', 'Bucanners Stand', '', '')
         +card('sport_ehc', 'EHC München Stand', '', '')
+        +card('wwe_ppv', 'WWE Next PPV', '', '')
         +card('news', 'News', '', '')
+        +card('oldnews', 'OldNews', '', '')
         +card('feeds', 'Feeds', '', '')
       script(src='build.js')
