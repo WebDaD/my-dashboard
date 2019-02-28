@@ -30,3 +30,9 @@ node_modules
 # BUilt stuff
 dist/*
 dist
+
+# Mac specific
+.DS_Store
+
+# Config
+config.json
