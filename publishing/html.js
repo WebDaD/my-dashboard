@@ -1,4 +1,4 @@
-module.exports = function (options, data, fs) {
+module.exports = async function (options, data, fs) {
   fs = (typeof fs === 'undefined') ? require('fs') : fs
   let html = ''
   html += '<html>'

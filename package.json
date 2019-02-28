@@ -1,15 +1,31 @@
 {
   "name": "my-dashboard",
-  "version": "1.0.0",
-  "description": "A small Dashboard that will show many Informations",
-  "main": "index.html",
+  "version": "0.5.0",
+  "description": "A Little node-Service to gather some information and make it avaiable on time.",
+  "keywords": [
+    "dashboard",
+    "collection",
+    "publishing",
+    "html",
+    "rss",
+    "mail"
+  ],
+  "main": "cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Dominik sigmund",
-  "license": "ISC",
+  "bin": {
+    "my-dashboard": "cli.js"
+  },
+  "author": "Dominik Sigmund <sigmund.dominik@googlemail.com> (https://webdad.eu)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WebDaD/my-dashboard"
+  },
+  "license": "The Unlicense",
   "dependencies": {
     "lib-log": "^1.0.0",
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "nodemailer": "^5.1.1"
   }
 }

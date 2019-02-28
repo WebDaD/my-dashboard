@@ -1,0 +1,42 @@
+{
+  "dataFolder":"/tmp/",
+  "log":{
+    "name": "DASHBOARD",
+    "file": "/tmp/dashboard.log",
+    "loglevel": "DEBUG"
+  },
+  "data": [
+    {
+      "title":"Datum",
+      "type":"date",
+      "options": {
+        "format":"dddd, DD.MM.YYYY"
+      }
+    }
+  ],
+  "publishing": [
+    {
+      "type":"html",
+      "options": {
+        "target":"/tmp/dashboard.html",
+        "title":"My personal Dashboard"
+      }
+    },
+    {
+      "type":"mail",
+      "options":{
+        "mailOptions": {
+          "host": "smtp.ethereal.email",
+          "port": 587,
+          "auth": {
+            "user": "elouise.cummings4@ethereal.email",
+            "pass": "pDHnnuT9ZVP574cnWz"
+          }
+        },
+        "from":"myaccount@test.de",
+        "to":"youraccount@test.de",
+        "subject":"Personal Dashboard for %DATE%"
+      }
+    }
+  ]
+}
