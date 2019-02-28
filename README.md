@@ -47,17 +47,16 @@ If the One you are looking for not here, feel free to make a pull-request or dro
 
 These Options can be used (multi-select possible!)
 
-* HTML (display a website with the info)
-* JSON (have a JSON ready)
-* XML (Have a XML ready)
-* RSS (An RSS-Feed with the Info)
+* html (display a website with the info)
+* xml (Have a XML ready)
+* rss (An RSS-Feed with the Info)
 
 (You need to have the Service running or send the files to a webserver of your choice (via config))
 
 ### Passive
 
-* Mail (send an email)
-* Print (send to printer)
+* mail (send an email)
+* print (send to printer)
 
 ## Installation
 

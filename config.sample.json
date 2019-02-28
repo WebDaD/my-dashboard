@@ -37,6 +37,22 @@
         "to":"youraccount@test.de",
         "subject":"Personal Dashboard for %DATE%"
       }
+    },
+    {
+      "type":"rss",
+      "options": {
+        "target":"/tmp/dashboard.rss",
+        "itemTitle":"Personal Dashboard for %DATE%",
+        "title":"My Personal Dashboard Feed",
+        "link":"https://test.feed.de",
+        "description":"my Daily Feed",
+        "category":"Information",
+        "language":"de-DE",
+        "pubDate":"Wed, 18 Apr 2018",
+        "image":"https://test.feed.de/image.png",
+        "icon":"https://test.feed.de/image.svg",
+        "color":"#ff6600"
+      }
     }
   ]
 }

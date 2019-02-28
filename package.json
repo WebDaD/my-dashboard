@@ -24,6 +24,7 @@
   },
   "license": "The Unlicense",
   "dependencies": {
+    "fast-xml-parser": "^3.12.13",
     "lib-log": "^1.0.0",
     "moment": "^2.24.0",
     "nodemailer": "^5.1.1"

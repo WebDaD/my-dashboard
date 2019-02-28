@@ -36,3 +36,4 @@ dist
 
 # Config
 config.json
+config.test.json
