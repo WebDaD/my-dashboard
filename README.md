@@ -79,7 +79,7 @@ The sequence to look for is as follows (top beats bottom):
 * Argument
 * Home Directory (.my-dashboard)
 * /etc/my-dashboard.json
-* Enviroment-Variable MY_DASHBOARD (points to a json file)
+* Enviroment-Variable MYDASHBOARD (points to a json file)
 * config.json by index.js (service only)
 
 ## Development

@@ -1,28 +1,43 @@
 const fs = require('fs')
 const path = require('path')
 const moment = require('moment')
-let now = moment()
-try {
-  if (process.argv && process.argv.length > 2) {
+const now = moment()
+const homedir = require('os').homedir()
+
+let configFile = ''
+if (process.argv && process.argv.length > 2) {
+  try {
     fs.accessSync(process.argv[2], fs.constants.R_OK)
-  } else {
-    // TODO: use configs by sequence
-    /*
-    * Home Directory (.my-dashboard)
-    * /etc/my-dashboard.json
-    * Enviroment-Variable MY_DASHBOARD (points to a json file)
-    */
+    configFile = process.argv[2]
+  } catch (error) {
+    console.error(process.argv[2] + ' does not exist or is not readable')
+    process.exit(2)
   }
-} catch (err) {
-  console.error(process.argv[2] + ' does not exist or is not readable')
-  process.exit(2)
+} else {
+  try {
+    fs.accessSync(path.join(homedir, '.my-dashboard'), fs.constants.R_OK)
+    configFile = path.join(homedir, '.my-dashboard')
+  } catch (error) {
+    try {
+      fs.accessSync('/etc/my-dashboard.json', fs.constants.R_OK)
+      configFile = '/etc/my-dashboard.json'
+    } catch (error) {
+      try {
+        fs.accessSync(process.env.MYDASHBOARD, fs.constants.R_OK)
+        configFile = process.env.MYDASHBOARD
+      } catch (error) {
+        console.error('No Config Found!')
+      }
+    }
+  }
 }
-let config = require(process.argv[2])
+
+let config = require(configFile)
 
 const Log = require('lib-log')
 const l = new Log(config.log)
 
-l.info('Using Config XXX')
+l.info('Using Config ' + configFile)
 
 let dataFile = path.join(path.resolve(config.dataFolder), now.format('YYYYMMDD') + '.json')
 try {
