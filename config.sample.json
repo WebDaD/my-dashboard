@@ -12,6 +12,14 @@
       "options": {
         "format":"dddd, DD.MM.YYYY"
       }
+    },
+    {
+      "title":"Tagesschau News Top 5",
+      "type":"rss-feed",
+      "options": {
+        "url":"https://www.tagesschau.de/xml/rss2",
+        "count": 5
+      }
     }
   ],
   "publishing": [
