@@ -89,3 +89,7 @@ There are many ways you can contribute ot this little project:
 * improve tests
 * write plugins for gathering data
 * write plugins for publishing reports
+
+## TODO
+
+* Gathering -> Return Object: text, link OR array of same objects
