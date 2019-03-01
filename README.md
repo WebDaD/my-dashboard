@@ -15,6 +15,8 @@ If the One you are looking for not here, feel free to make a pull-request or dro
 - [ ] google-mail (get some mails in the inbox)
 - [ ] weather (get weather for a location for today)
 - [x] date (get the Day and Date)
+- [ ] todotxt (get Info from your Todo.txt)
+- [ ] twitter (get info from your twitter service)
 - [ ] json (parse a json and get info from it)
 - [ ] monitor (check if a server / url / port is alive)
 - [ ] botd (get the blessing of the day from botd.webdad.eu)
