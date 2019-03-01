@@ -45,7 +45,16 @@ module.exports = async function (options, data, fs, moment, parser) {
   for (let index = 0; index < data.length; index++) {
     const element = data[index]
     description += '<h2>' + element.title + '</h2>'
-    description += '<p>' + element.content + '</p>'
+    if (Array.isArray(element.content)) {
+      description += '<ul>'
+      for (let index = 0; index < element.content.length; index++) {
+        const el = element.content[index]
+        description += '<li>' + el + '</li>'
+      }
+      description += '</ul>'
+    } else {
+      description += '<p>' + element.content + '</p>'
+    }
     description += '<hr/>'
   }
   description += ' ]]>'

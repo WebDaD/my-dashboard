@@ -18,8 +18,8 @@ async function main () {
     }
   } else {
     try {
-      fs.accessSync(path.join(homedir, '.my-dashboard'), fs.constants.R_OK)
-      configFile = path.join(homedir, '.my-dashboard')
+      fs.accessSync(path.join(homedir, '.my-dashboard.json'), fs.constants.R_OK)
+      configFile = path.join(homedir, '.my-dashboard.json')
     } catch (error) {
       try {
         fs.accessSync('/etc/my-dashboard.json', fs.constants.R_OK)
@@ -56,17 +56,17 @@ async function main () {
   l.debug('Using dataFile ' + dataFile)
 
   let gatherer = {}
-  let gatheringFiles = fs.readdirSync('./gathering/')
+  let gatheringFiles = fs.readdirSync(path.join(__dirname, 'gathering'))
   for (let index = 0; index < gatheringFiles.length; index++) {
     const gatheringFile = gatheringFiles[index]
-    gatherer[gatheringFile.replace('.js', '')] = require('./gathering/' + gatheringFile)
+    gatherer[gatheringFile.replace('.js', '')] = require(path.join(__dirname, 'gathering', gatheringFile))
   }
 
   let publisher = {}
-  let publisherFiles = fs.readdirSync('./publishing/')
+  let publisherFiles = fs.readdirSync(path.join(__dirname, 'publishing'))
   for (let index = 0; index < publisherFiles.length; index++) {
     const publisherFile = publisherFiles[index]
-    publisher[publisherFile.replace('.js', '')] = require('./publishing/' + publisherFile)
+    publisher[publisherFile.replace('.js', '')] = require(path.join(__dirname, 'publishing', publisherFile))
   }
 
   l.info('Starting Data Collection')
@@ -74,9 +74,10 @@ async function main () {
   for (let index = 0; index < config.data.length; index++) {
     const element = config.data[index]
     try {
+      let output = await gatherer[element.type](element.options)
       data.push({
         title: element.title,
-        content: gatherer[element.type](element.options)
+        content: output
       })
       l.info('Gathering of "' + element.title + '" (' + element.type + ') done')
     } catch (error) {

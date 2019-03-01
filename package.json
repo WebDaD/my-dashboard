@@ -15,7 +15,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "my-dashboard": "cli.js"
+    "dashboard": "cli.js"
   },
   "author": "Dominik Sigmund <sigmund.dominik@googlemail.com> (https://webdad.eu)",
   "repository": {
@@ -27,6 +27,7 @@
     "fast-xml-parser": "^3.12.13",
     "lib-log": "^1.0.0",
     "moment": "^2.24.0",
-    "nodemailer": "^5.1.1"
+    "nodemailer": "^5.1.1",
+    "rss-parser": "^3.6.3"
   }
 }

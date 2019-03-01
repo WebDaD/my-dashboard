@@ -12,7 +12,16 @@ module.exports = async function (options, data, nodemailer, moment) {
   for (let index = 0; index < data.length; index++) {
     const element = data[index]
     html += '<h2>' + element.title + '</h2>'
-    html += '<p>' + element.content + '</p>'
+    if (Array.isArray(element.content)) {
+      html += '<ul>'
+      for (let index = 0; index < element.content.length; index++) {
+        const el = element.content[index]
+        html += '<li>' + el + '</li>'
+      }
+      html += '</ul>'
+    } else {
+      html += '<p>' + element.content + '</p>'
+    }
     html += '<hr/>'
   }
 

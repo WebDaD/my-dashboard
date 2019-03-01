@@ -13,10 +13,19 @@ module.exports = async function (options, data, fs) {
   for (let index = 0; index < data.length; index++) {
     const element = data[index]
     html += '<div class="card text-center">'
-    html += ' <div class="card-body">'
-    html += '   <h5 class="card-title">' + element.title + '</h5>'
-    html += '   <p class="card-text">' + element.content + '</p>'
-    html += ' </div>'
+    html += ' <div class="card-header">' + element.title + '</div>'
+    if (Array.isArray(element.content)) {
+      html += '<ul class="list-group list-group-flush">'
+      for (let index = 0; index < element.content.length; index++) {
+        const el = element.content[index]
+        html += '<li class="list-group-item">' + el + '</li>'
+      }
+      html += '</ul>'
+    } else {
+      html += ' <div class="card-body">'
+      html += '   <p class="card-text">' + element.content + '</p>'
+      html += ' </div>'
+    }
     html += '</div>'
   }
   html += '     </div>'
