@@ -49,18 +49,18 @@ module.exports = async function (options, data, fs, moment, parser) {
       description += '<ul>'
       for (let index = 0; index < element.content.length; index++) {
         const el = element.content[index]
-        if (el.link) {
+        if (typeof el.link !== 'undefined') {
           description += '<li><a href="' + el.link + '" target="_blank">' + el.content + '</a></li>'
         } else {
-          description += '<li>' + el + '</li>'
+          description += '<li>' + el.content + '</li>'
         }
       }
       description += '</ul>'
     } else {
-      if (element.content.link) {
+      if (typeof element.content.link !== 'undefined') {
         description += '<p><a href="' + element.content.link + '" target="_blank">' + element.content.content + '</a></p'
       } else {
-        description += '<p>' + element.content + '</p>'
+        description += '<p>' + element.content.content + '</p>'
       }
     }
     description += '<hr/>'

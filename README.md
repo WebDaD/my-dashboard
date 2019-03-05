@@ -8,14 +8,14 @@ Everything is configurable.
 ### What
 
 Many Sources can be accessed.  
-If the One you are looking for not here, feel free to make a pull-request or drop an issue.
+If the One you are looking for is not here, feel free to make a pull-request or drop an issue.
 
 - [x] rss-feed (get some items from a feed)
 - [ ] google-calendar (get some dates for today and some days)
 - [ ] google-mail (get some mails in the inbox)
 - [ ] weather (get weather for a location for today)
 - [x] date (get the Day and Date)
-- [ ] todotxt (get Info from your Todo.txt)
+- [x] todotxt (get Info from your Todo.txt form dropbox)
 - [ ] twitter (get info from your twitter service)
 - [ ] json (parse a json and get info from it)
 - [ ] monitor (check if a server / url / port is alive)
@@ -26,6 +26,39 @@ If the One you are looking for not here, feel free to make a pull-request or dro
 - [ ] fussball (get table, games for all or a team (german football))
 - [ ] on-this-day (get info for this day in history)
 - [ ] life-is-more (get daily text from here)
+
+
+#### rss-feed
+
+Get Items from a Feed.
+
+Options:
+
+- url: The URL of the Feed
+- count: How Many Items to fetch
+
+#### date
+
+Get the Date of today.
+
+Options:
+
+- format: The moment.js-Format of the Returned Date
+
+#### todotxt
+
+Get Tasks from your todo.txt File in your Dropbox-Folder
+
+Options:
+
+- dropboxApiKey: An API Key for your Dropbox
+- dropboxFolder: The Folder where the todo.txt File lives
+- sort (optional): Sort the Tasks (date | due | prio | date,due | due,prio)
+- dueToday (optional): Show only Tasks for today
+- start (optional): start by Tasks number
+- end (optional): end by Task Number
+- context (optional): Only Tasks with this context
+- project (optional): Only Tasks with this Project
 
 ### When
 
@@ -52,13 +85,66 @@ These Options can be used (multi-select possible!)
 - [x] html (display a website with the info)
 - [ ] xml (Have a XML ready)
 - [x] rss (An RSS-Feed with the Info)
+- [x] json (A JSON-File with the Info)
 
 (You need to have the Service running or send the files to a webserver of your choice (via config))
+
+#### html
+
+Return a Website
+
+Options:
+
+- target: The File to write to
+- title: The Title of the Website
+
+#### rss
+
+Create an ongoing RSS-Stream
+
+Options:
+
+- target: The File to write to
+- title: The Title of the Feed
+- itemTitle: Title of any Item (can use %DATE% Variable)
+- link: Link of the Feed
+- description: Description for the Feed
+- category: Category for the Feed
+- language: Language of the Feed
+- pubDate: First Publicaction date
+- image: Feed image as png
+- icon: Feed image as svg
+- color: Feed color as hex
+
+#### json
+
+Just write the JSON-File to a file
+
+Options:
+
+- target: The File to write to
 
 ### Passive
 
 - [x] mail (send an email)
 - [ ] print (send to printer)
+
+
+#### mail
+
+Send an E-Mail with your Dashboard
+
+Options:
+
+- mailOptions: Object with Server-Data
+- mailOptions.host: Server-Host for Mailing
+- mailOptions.port: port for Mailing
+- mailOptions.auth: Auth-Data for Mail User
+- mailOptions.auth.user: Mail User
+- mailOptions.auth.pass: Mail user Password
+- from: Send form this Account
+- to: target E-Mail Adresses
+- subject: Subject of the Mail (can use %DATE% Variable)
 
 ## Installation
 

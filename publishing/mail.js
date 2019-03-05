@@ -16,18 +16,18 @@ module.exports = async function (options, data, nodemailer, moment) {
       html += '<ul>'
       for (let index = 0; index < element.content.length; index++) {
         const el = element.content[index]
-        if (el.link) {
+        if (typeof el.link !== 'undefined') {
           html += '<li><a href="' + el.link + '" target="_blank">' + el.content + '</a></li>'
         } else {
-          html += '<li>' + el + '</li>'
+          html += '<li>' + el.content + '</li>'
         }
       }
       html += '</ul>'
     } else {
-      if (element.content.link) {
+      if (typeof element.content.link !== 'undefined') {
         html += '<p><a href="' + element.content.link + '" target="_blank">' + element.content.content + '</a></p'
       } else {
-        html += '<p>' + element.content + '</p>'
+        html += '<p>' + element.content.content + '</p>'
       }
     }
     html += '<hr/>'

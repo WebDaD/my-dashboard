@@ -24,10 +24,12 @@
   },
   "license": "The Unlicense",
   "dependencies": {
+    "dropbox-fs": "^0.3.1",
     "fast-xml-parser": "^3.12.13",
     "lib-log": "^1.0.0",
     "moment": "^2.24.0",
     "nodemailer": "^5.1.1",
-    "rss-parser": "^3.6.3"
+    "rss-parser": "^3.6.3",
+    "todotxt": "^1.1.1"
   }
 }
