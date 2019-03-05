@@ -8,7 +8,10 @@ module.exports = async function (options, RssParser) {
 
   for (let index = 0; index < options.count; index++) {
     const item = feed.items[index]
-    output.push(item.title + ' (' + item.link + ')')
+    output.push({
+      content: item.title,
+      link: item.link
+    })
   }
   return output
 }

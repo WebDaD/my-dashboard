@@ -18,12 +18,20 @@ module.exports = async function (options, data, fs) {
       html += '<ul class="list-group list-group-flush">'
       for (let index = 0; index < element.content.length; index++) {
         const el = element.content[index]
-        html += '<li class="list-group-item">' + el + '</li>'
+        if (el.link) {
+          html += '<li class="list-group-item"><a href="' + el.link + '" target="_blank">' + el.content + '</a></li>'
+        } else {
+          html += '<li class="list-group-item">' + el + '</li>'
+        }
       }
       html += '</ul>'
     } else {
       html += ' <div class="card-body">'
-      html += '   <p class="card-text">' + element.content + '</p>'
+      if (element.content.link) {
+        html += '<li class="card-text"><a href="' + element.content.link + '" target="_blank">' + element.content.content + '</a></li>'
+      } else {
+        html += '<li class="card-text">' + element.content + '</li>'
+      }
       html += ' </div>'
     }
     html += '</div>'
