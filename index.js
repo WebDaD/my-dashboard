@@ -96,6 +96,18 @@ app.get('/dashboard.rss', async function (req, res) {
     res.status(500).json(err)
   }
 })
-// TODO:  OLD (paths)
+app.get('/:time.json', async function (req, res) {
+  try {
+    let json = {}
+    if (config.dropbox.active) {
+      json = await dfsReadFile(path.join(config.dataFolder, req.params.time + '.json'), { encoding: 'utf8' })
+    } else {
+      json = fs.readFileSync(path.join(config.dataFolder, req.params.time + '.json'))
+    }
+    res.json(JSON.parse(json))
+  } catch (err) {
+    res.status(500).json(err)
+  }
+})
 
 // TODO: add crontimer to gather/publish data
