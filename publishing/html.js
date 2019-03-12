@@ -1,5 +1,4 @@
-module.exports = async function (options, data, fs) {
-  fs = (typeof fs === 'undefined') ? require('fs') : fs
+module.exports = async function (options, data, dropbox, fs, dfs, util) {
   let html = ''
   html += '<html>'
   html += ' <head>'
@@ -40,9 +39,19 @@ module.exports = async function (options, data, fs) {
   html += '   </div>'
   html += ' </body>'
   html += '</html>'
-  try {
-    fs.writeFileSync(options.target, html)
-  } catch (error) {
-    throw error
+
+  if (dropbox.active) {
+    const dfs = require('dropbox-fs/')({
+      apiKey: dropbox.apiKey
+    })
+    util = (typeof util === 'undefined') ? require('util') : util
+    await util.promisify(dfs.writeFile.bind(dfs))(options.target, html)
+  } else {
+    fs = (typeof fs === 'undefined') ? require('fs') : fs
+    try {
+      fs.writeFileSync(options.target, html)
+    } catch (error) {
+      throw error
+    }
   }
 }

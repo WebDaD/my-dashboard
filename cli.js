@@ -1,8 +1,15 @@
 const fs = require('fs')
 const path = require('path')
 const moment = require('moment')
+const util = require('util')
 const now = moment()
+let dfs
+let dfsWriteFile
+let dfsReadFile
 const homedir = require('os').homedir()
+
+const gather = require('./lib/gather.js')
+const publish = require('./lib/publish.js')
 
 main()
 
@@ -42,12 +49,30 @@ async function main () {
 
   l.info('Using Config ' + configFile)
 
-  let dataFile = path.join(path.resolve(config.dataFolder), now.format('YYYYMMDD') + '.json')
+  if (config.dropbox.active) { // use dropbox-fs
+    dfs = require('dropbox-fs/')({
+      apiKey: config.dropbox.apiKey
+    })
+    dfsWriteFile = util.promisify(dfs.writeFile).bind(dfs)
+    dfsReadFile = util.promisify(dfs.readFile).bind(dfs)
+    l.info('Using Dropbox as Filesystem')
+  }
+
+  let dataFile = path.join(config.dataFolder, now.format('YYYYMMDD') + '.json')
+
   try {
-    fs.accessSync(dataFile, this.fs.constants.R_OK | this.fs.constants.W_OK)
+    if (config.dropbox.active) { // use dropbox-fs
+      await dfsReadFile(dataFile, { encoding: 'utf8' })
+    } else {
+      fs.accessSync(dataFile, this.fs.constants.R_OK | this.fs.constants.W_OK)
+    }
   } catch (err) {
     try {
-      fs.writeFileSync(dataFile, '[]')
+      if (config.dropbox.active) { // use dropbox-fs
+        await dfsWriteFile(dataFile, '[]', { encoding: 'utf8' })
+      } else {
+        fs.writeFileSync(dataFile, '[]')
+      }
     } catch (err) {
       l.error('Cannot write File ' + dataFile)
       process.exit(4)
@@ -55,49 +80,15 @@ async function main () {
   }
   l.debug('Using dataFile ' + dataFile)
 
-  let gatherer = {}
-  let gatheringFiles = fs.readdirSync(path.join(__dirname, 'gathering'))
-  for (let index = 0; index < gatheringFiles.length; index++) {
-    const gatheringFile = gatheringFiles[index]
-    gatherer[gatheringFile.replace('.js', '')] = require(path.join(__dirname, 'gathering', gatheringFile))
+  let data = await gather(l, config)
+
+  if (config.dropbox.active) { // use dropbox-fs
+    await dfsWriteFile(dataFile, JSON.stringify(data), { encoding: 'utf8' })
+  } else {
+    fs.writeFileSync(dataFile, JSON.stringify(data))
   }
 
-  let publisher = {}
-  let publisherFiles = fs.readdirSync(path.join(__dirname, 'publishing'))
-  for (let index = 0; index < publisherFiles.length; index++) {
-    const publisherFile = publisherFiles[index]
-    publisher[publisherFile.replace('.js', '')] = require(path.join(__dirname, 'publishing', publisherFile))
-  }
+  await publish(l, config, data)
 
-  l.info('Starting Data Collection')
-  let data = []
-  for (let index = 0; index < config.data.length; index++) {
-    const element = config.data[index]
-    try {
-      let output = await gatherer[element.type](element.options)
-      data.push({
-        title: element.title,
-        content: output
-      })
-      l.info('Gathering of "' + element.title + '" (' + element.type + ') done')
-    } catch (error) {
-      l.error('Error Gathering of "' + element.title + '" (' + element.type + '): ' + error)
-    }
-  }
-  l.info('Data Done')
-  fs.writeFileSync(dataFile, JSON.stringify(data))
-
-  l.info('Starting to publish data')
-
-  for (let index = 0; index < config.publishing.length; index++) {
-    const element = config.publishing[index]
-    try {
-      await publisher[element.type](element.options, data)
-      l.info('Publishing to ' + element.type + ' done.')
-    } catch (error) {
-      l.error('Error on Publish to ' + element.type + ': ' + error)
-    }
-  }
-  l.info('Publishing Done')
   process.exit(0)
 }

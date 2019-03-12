@@ -50,7 +50,7 @@ module.exports = async function (options, dropboxFS, todotxt, path, util, moment
     if (options.complete && task.complete !== options.complete) {
       continue
     }
-    if (options.dueToday && !moment(task.due).isSame(moment(), 'day')) { // due:YYYY-MM-DD
+    if (options.dueToday && !moment(task.due, 'YYYY-MM-DD').isSame(moment(), 'day')) { // due:YYYY-MM-DD
       continue
     }
     returner.push({

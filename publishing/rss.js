@@ -1,13 +1,28 @@
-module.exports = async function (options, data, fs, moment, parser) {
-  fs = (typeof fs === 'undefined') ? require('fs') : fs
+module.exports = async function (options, data, dropbox, moment, parser, fs, dfs, util) {
   moment = (typeof moment === 'undefined') ? require('moment') : moment
   parser = (typeof parser === 'undefined') ? require('fast-xml-parser') : parser
+  util = (typeof util === 'undefined') ? require('util') : util
+  fs = (typeof fs === 'undefined') ? require('fs') : fs
+  let dfsWriteFile
+  let dfsReadFile
+
+  if (dropbox.active) { // use dropbox-fs
+    dfs = require('dropbox-fs/')({
+      apiKey: dropbox.apiKey
+    })
+    dfsWriteFile = util.promisify(dfs.writeFile).bind(dfs)
+    dfsReadFile = util.promisify(dfs.readFile).bind(dfs)
+  }
 
   // D, d M Y H:i:s O
   let dateFormat = 'ddd, DD MMM YYYY HH:mm:ss ZZ'
 
   try {
-    fs.accessSync(options.target, fs.constants.R_OK | fs.constants.W_OK)
+    if (dropbox.active) { // use dropbox-fs
+      await dfsReadFile(options.target, { encoding: 'utf8' })
+    } else {
+      fs.accessSync(options.target, this.fs.constants.R_OK | this.fs.constants.W_OK)
+    }
   } catch (error) {
     let rss = '<rss xmlns:content="http://purl.org/rss/1.0/modules/content/"  xmlns:webfeeds="http://webfeeds.org/rss/1.0" version="2.0">'
     rss += '  <channel>'
@@ -30,9 +45,20 @@ module.exports = async function (options, data, fs, moment, parser) {
     rss += '  <webfeeds:related layout="card" target="browser"/>'
     rss += '  </channel>'
     rss += '</rss>'
-    fs.writeFileSync(options.target, rss)
+    if (dropbox.active) { // use dropbox-fs
+      await dfsWriteFile(options.target, rss, { encoding: 'utf8' })
+    } else {
+      fs.writeFileSync(options.target, rss)
+    }
   }
-  let xmlData = fs.readFileSync(options.target, 'utf8')
+
+  let xmlData
+  if (dropbox.active) { // use dropbox-fs
+    xmlData = await dfsReadFile(options.target, { encoding: 'utf8' })
+  } else {
+    xmlData = fs.readFileSync(options.target, 'utf8')
+  }
+
   var jsonRSS = parser.parse(xmlData, {
     ignoreAttributes: false,
     allowBooleanAttributes: true,
@@ -95,9 +121,10 @@ module.exports = async function (options, data, fs, moment, parser) {
     allowBooleanAttributes: true
   })
   var xml = xmlparser.parse(jsonRSS)
-  try {
+
+  if (dropbox.active) { // use dropbox-fs
+    await dfsWriteFile(options.target, xml, { encoding: 'utf8' })
+  } else {
     fs.writeFileSync(options.target, xml)
-  } catch (error) {
-    throw error
   }
 }
