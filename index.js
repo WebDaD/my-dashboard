@@ -67,11 +67,35 @@ app.get('/', async function (req, res) {
     } else {
       res.sendFile(path.join(config.dataFolder, 'dashboard.html'))
     }
-  } catch(err) {
+  } catch (err) {
     res.status(500).json(err)
   }
 })
-
-// TODO: JSON / RSS / OLD (paths)
+app.get('/dashboard.json', async function (req, res) {
+  try {
+    let json = {}
+    if (config.dropbox.active) {
+      json = await dfsReadFile(path.join(config.dataFolder, 'dashboard.json'), { encoding: 'utf8' })
+    } else {
+      json = fs.readFileSync(path.join(config.dataFolder, 'dashboard.json'))
+    }
+    res.json(JSON.parse(json))
+  } catch (err) {
+    res.status(500).json(err)
+  }
+})
+app.get('/dashboard.rss', async function (req, res) {
+  try {
+    if (config.dropbox.active) {
+      let xml = await dfsReadFile(path.join(config.dataFolder, 'dashboard.rss'), { encoding: 'utf8' })
+      res.header('Content-Type', 'text/xml').send(xml)
+    } else {
+      res.sendFile(path.join(config.dataFolder, 'dashboard.rss'))
+    }
+  } catch (err) {
+    res.status(500).json(err)
+  }
+})
+// TODO:  OLD (paths)
 
 // TODO: add crontimer to gather/publish data

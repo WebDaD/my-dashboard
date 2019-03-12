@@ -15,7 +15,7 @@ module.exports = async function (options, data, dropbox, moment, parser, fs, dfs
   }
 
   // D, d M Y H:i:s O
-  let dateFormat = 'ddd, DD MMM YYYY HH:mm:ss ZZ'
+  let dateFormat = 'ddd, DD MMM YYYY HH:mm:ss [GMT]'
 
   try {
     if (dropbox.active) { // use dropbox-fs
@@ -24,14 +24,14 @@ module.exports = async function (options, data, dropbox, moment, parser, fs, dfs
       fs.accessSync(options.target, this.fs.constants.R_OK | this.fs.constants.W_OK)
     }
   } catch (error) {
-    let rss = '<rss xmlns:content="http://purl.org/rss/1.0/modules/content/"  xmlns:webfeeds="http://webfeeds.org/rss/1.0" version="2.0">'
+    let rss = '<rss xmlns:content="http://purl.org/rss/1.0/modules/content/"  xmlns:webfeeds="http://webfeeds.org/rss/1.0" version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">'
     rss += '  <channel>'
     rss += '  <title>' + options.title + '</title>'
     rss += '  <link>' + options.link + '</link>'
     rss += '  <description>' + options.title + '</description>'
     rss += '  <category>' + options.category + '</category>'
     rss += '  <language>' + options.language + '</language>'
-    rss += '  <pubDate>' + options.pubDate + '</pubDate>'
+    rss += '  <pubDate>' + moment().format(dateFormat) + '</pubDate>'
     rss += '  <lastBuildDate>' + moment().format(dateFormat) + '</lastBuildDate>'
     rss += '  <image>'
     rss += '    <url>' + options.image + '</url>'
@@ -43,6 +43,7 @@ module.exports = async function (options, data, dropbox, moment, parser, fs, dfs
     rss += '  <webfeeds:logo>' + options.icon + '</webfeeds:logo>'
     rss += '  <webfeeds:accentColor>' + options.color + '</webfeeds:accentColor>'
     rss += '  <webfeeds:related layout="card" target="browser"/>'
+    rss += '  <atom:link href="' + options.link + '" rel="self" type="application/rss+xml" />'
     rss += '  </channel>'
     rss += '</rss>'
     if (dropbox.active) { // use dropbox-fs
@@ -100,6 +101,7 @@ module.exports = async function (options, data, dropbox, moment, parser, fs, dfs
   if (!Array.isArray(jsonRSS.rss.channel.item)) {
     let itemtmp = jsonRSS.rss.channel.item
     jsonRSS.rss.channel.item = []
+    itemtmp.guid = itemtmp.guid || options.link + '/' + moment().format('YYYYMMDD') + '.json'
     itemtmp.description = '<![CDATA[ ' + itemtmp.description.description + ' ]]>'
     jsonRSS.rss.channel.item.push(itemtmp)
   } else {
@@ -110,8 +112,9 @@ module.exports = async function (options, data, dropbox, moment, parser, fs, dfs
 
   jsonRSS.rss.channel.item.push({
     title: options.itemTitle.replace('%DATE%', moment().format('DD.MM.YYYY')),
-    link: options.link,
+    link: options.link + '/' + moment().format('YYYYMMDD') + '.json',
     description: description,
+    guid: options.link + '/' + moment().format('YYYYMMDD') + '.json',
     pubDate: moment().format(dateFormat)
   })
 
@@ -120,6 +123,7 @@ module.exports = async function (options, data, dropbox, moment, parser, fs, dfs
     ignoreAttributes: false,
     allowBooleanAttributes: true
   })
+  jsonRSS.rss.channel.lastBuildDate = moment().format(dateFormat)
   var xml = xmlparser.parse(jsonRSS)
 
   if (dropbox.active) { // use dropbox-fs
