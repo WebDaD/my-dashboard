@@ -3,6 +3,10 @@ const app = express()
 const server = require('http').createServer(app)
 
 const fs = require('fs')
+const path = require('path')
+const util = require('util')
+let dfs
+let dfsReadFile
 
 let configFile = ''
 if (process.argv && process.argv.length > 2) {
@@ -29,6 +33,14 @@ if (process.argv && process.argv.length > 2) {
 
 let config = require(configFile)
 
+if (config.dropbox.active) { // use dropbox-fs
+  dfs = require('dropbox-fs/')({
+    apiKey: config.dropbox.apiKey
+  })
+  dfsReadFile = util.promisify(dfs.readFile).bind(dfs)
+  console.log('Using Dropbox as Filesystem')
+}
+
 server.listen(config.port)
 console.log('Dashboard Service running on ' + config.port)
 
@@ -38,10 +50,19 @@ app.use(function (req, res, next) {
   next()
 })
 
-app.get('/', function (req, res) { // TODO: https://medium.com/@Abazhenov/using-async-await-in-express-with-node-8-b8af872c0016
-  res.json(devices.data)
+app.get('/', async function (req, res) { 
+  try {
+    if (config.dropbox.active) {
+      let html = await dfsReadFile(path.join(config.dataFolder, 'dashboard.html'), { encoding: 'utf8' })
+      res.send(html)
+    } else {
+      res.sendFile(path.join(config.dataFolder, 'dashboard.html'))
+    }
+  } catch(err) {
+    res.status(500).json(err)
+  }
 })
 
-// TODO: read /write Files from Dropbox or local system
+// TODO: JSON / RSS / OLD (paths)
 
 // TODO: add crontimer to gather/publish data
