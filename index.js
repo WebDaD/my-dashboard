@@ -11,28 +11,33 @@ let dfsReadFile
 // TODO: Add dropbox Info to readme
 
 let configFile = ''
-// TODO: first try is config.json in this folder
 
-if (process.argv && process.argv.length > 2) {
-  try {
-    fs.accessSync(process.argv[2], fs.constants.R_OK)
-    configFile = process.argv[2]
-  } catch (error) {
-    console.error(process.argv[2] + ' does not exist or is not readable')
-    process.exit(2)
-  }
-} else {
-  try {
-    fs.accessSync('/etc/my-dashboard.json', fs.constants.R_OK)
-    configFile = '/etc/my-dashboard.json'
-  } catch (error) {
+try {
+  fs.accessSync(path.join(__dirname, 'config.json'), fs.constants.R_OK)
+  configFile = path.join(__dirname, 'config.json')
+} catch (er) {
+  if (process.argv && process.argv.length > 2) {
     try {
-      fs.accessSync(process.env.MYDASHBOARD, fs.constants.R_OK)
-      configFile = process.env.MYDASHBOARD
+      fs.accessSync(process.argv[2], fs.constants.R_OK)
+      configFile = process.argv[2]
     } catch (error) {
-      console.error('No Config Found!')
+      console.error(process.argv[2] + ' does not exist or is not readable')
+      process.exit(2)
+    }
+  } else {
+    try {
+      fs.accessSync('/etc/my-dashboard.json', fs.constants.R_OK)
+      configFile = '/etc/my-dashboard.json'
+    } catch (error) {
+      try {
+        fs.accessSync(process.env.MYDASHBOARD, fs.constants.R_OK)
+        configFile = process.env.MYDASHBOARD
+      } catch (error) {
+        console.error('No Config Found!')
+      }
     }
   }
+  
 }
 
 let config = require(configFile)
