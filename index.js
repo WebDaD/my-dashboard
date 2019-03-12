@@ -8,7 +8,11 @@ const util = require('util')
 let dfs
 let dfsReadFile
 
+// TODO: Add dropbox Info to readme
+
 let configFile = ''
+// TODO: first try is config.json in this folder
+
 if (process.argv && process.argv.length > 2) {
   try {
     fs.accessSync(process.argv[2], fs.constants.R_OK)
